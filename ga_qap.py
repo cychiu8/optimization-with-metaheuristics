@@ -188,40 +188,42 @@ print()
 print("------------------------------")
 
 
-### FOR PLOTTING THE BEST SOLUTION FROM EACH GENERATION ###
+def plot_best_solution_from_each_generation(best_of_a_generation):
+    """
+    PLOTTING THE BEST SOLUTION FROM EACH GENERATION
+    """
+    sorted_best_of_a_generation = np.array(sorted(best_of_a_generation,
+                                                  key=lambda x: x[0]))
+    best_string_overall = sorted_best_of_a_generation[0]
+    best_obj_val_overall = best_string_overall[0]
+    plt.plot(best_of_a_generation[:, 0])
+    plt.axhline(y=best_obj_val_overall, color='r', linestyle='--')
+    plt.title("Z Reached Through Generations", fontsize=20, fontweight='bold')
+    plt.xlabel("Generation", fontsize=18, fontweight='bold')
+    plt.ylabel("Z", fontsize=18, fontweight='bold')
+    plt.xticks(fontweight='bold')
+    plt.yticks(fontweight='bold')
 
-best_obj_val_overall = best_string_overall[0]
+    if sorted_best_of_a_generation[-1][0] > 2:
+        k = 0.8
+    elif sorted_best_of_a_generation[-1][0] > 1:
+        k = 0.5
+    elif sorted_best_of_a_generation[-1][0] > 0.5:
+        k = 0.3
+    elif sorted_best_of_a_generation[-1][0] > 0.3:
+        k = 0.2
+    else:
+        k = 0.1
+
+    xyz2 = (GENERATIONS/6, best_obj_val_overall)
+    xyzz2 = (GENERATIONS/5.4, best_obj_val_overall+(k/2))
+
+    plt.annotate("Minimum Overall: %0.5f" % best_obj_val_overall, xy=xyz2, xytext=xyzz2,
+                 arrowprops=dict(facecolor='black', shrink=1,
+                                 width=1, headwidth=5),
+                 fontsize=12, fontweight='bold')
+
+    plt.show()
 
 
-plt.plot(best_of_a_generation[:, 0])
-plt.axhline(y=best_obj_val_overall, color='r', linestyle='--')
-
-plt.title("Z Reached Through Generations", fontsize=20, fontweight='bold')
-plt.xlabel("Generation", fontsize=18, fontweight='bold')
-plt.ylabel("Z", fontsize=18, fontweight='bold')
-plt.xticks(fontweight='bold')
-plt.yticks(fontweight='bold')
-
-
-if sorted_best_of_a_generation[-1][0] > 2:
-    k = 0.8
-elif sorted_best_of_a_generation[-1][0] > 1:
-    k = 0.5
-elif sorted_best_of_a_generation[-1][0] > 0.5:
-    k = 0.3
-elif sorted_best_of_a_generation[-1][0] > 0.3:
-    k = 0.2
-else:
-    k = 0.1
-
-
-xyz2 = (GENERATIONS/6, best_obj_val_overall)
-xyzz2 = (GENERATIONS/5.4, best_obj_val_overall+(k/2))
-
-plt.annotate("Minimum Overall: %0.5f" % best_obj_val_overall, xy=xyz2, xytext=xyzz2,
-             arrowprops=dict(facecolor='black', shrink=1,
-                             width=1, headwidth=5),
-             fontsize=12, fontweight='bold')
-
-
-plt.show()
+plot_best_solution_from_each_generation(best_of_a_generation)

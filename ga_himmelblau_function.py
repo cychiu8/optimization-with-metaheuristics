@@ -21,7 +21,7 @@ size_of_chromosome = len(x_y_string)
 pool_of_solutions = np.empty((0, size_of_chromosome))
 best_of_a_generation = np.empty((0, size_of_chromosome+1))
 
-for generation in range(POPULATION):
+for chrome in range(POPULATION):
     rd.shuffle(x_y_string)
     pool_of_solutions = np.vstack((pool_of_solutions, x_y_string))
 
