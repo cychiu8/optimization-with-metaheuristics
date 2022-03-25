@@ -28,7 +28,10 @@ temp = []
 obj_val = []
 
 
-def objectiveValue(array):
+def objective_value(array):
+    """
+    the objective function for qap
+    """
     df = Dist.reindex(columns=array, index=array)
     arr = np.array(df)
     start = pd.DataFrame(arr*Flow)
@@ -37,57 +40,69 @@ def objectiveValue(array):
     return obj
 
 
-def tempatureFormula(neighbor, current):
-    return 1/(np.exp((neighbor - current)/Temperature))
+def tempature_formula(neighbor_obj, current_obj):
+    """
+    the temperature formula for anneal stealing
+    """
+    return 1/(np.exp((neighbor_obj - current_obj)/Temperature))
 
 
-def isObjBetter(neighbor, current):
-    return obj_val_neighbor <= obj_val_current
+def is_obj_better(neighbor_obj, current_obj):
+    """
+    depends on the objective function is minimize or maximize
+    """
+    return neighbor_obj <= current_obj
 
 
-def acceptNeighbor(neighbor, current):
-    if (isObjBetter(neighbor, current)):
+def accept_neighbor(neighbor_obj, current_obj):
+    """
+    whether to accept the neighbor or not
+    """
+    if (is_obj_better(neighbor_obj, current_obj)):
         return True
     rand_threshold = np.random.rand()
-    if rand_threshold <= tempatureFormula(neighbor, current):
+    if rand_threshold <= tempature_formula(neighbor_obj, current_obj):
         return True
     return False
 
 
-def generateNeighbor(current):
+def generate_neighbor(current_solution):
     """
     2-swap
     """
-    ran_1 = np.random.randint(0, len(current))
-    ran_2 = np.random.randint(0, len(current))
+    ran_1 = np.random.randint(0, len(current_solution))
+    ran_2 = np.random.randint(0, len(current_solution))
     while ran_1 == ran_2:
-        ran_2 = np.random.randint(0, len(current))
-    neighbor = current.copy()
+        ran_2 = np.random.randint(0, len(current_solution))
+    neighbor = current_solution.copy()
     tmp = neighbor[ran_1]
     neighbor[ran_1] = neighbor[ran_2]
     neighbor[ran_2] = tmp
     return neighbor
 
 
-def printSolution():
+def print_solution():
+    """
+    print solution
+    """
     print('Solution = =', current)
     print('obj = %0.3f' % obj_val_current)
 
 
 current = ["B", "D", "A", "E", "C", "F", "G", "H"]
-obj_val_current = objectiveValue(current)
+obj_val_current = objective_value(current)
 
 for i in range(M):
 
     for j in range(N):
 
         # search the neighbor
-        neighbor = generateNeighbor(current)
+        neighbor = generate_neighbor(current)
 
-        obj_val_neighbor = objectiveValue(neighbor)
-        obj_val_current = objectiveValue(current)
+        obj_val_neighbor = objective_value(neighbor)
+        obj_val_current = objective_value(current)
 
-        if (acceptNeighbor(obj_val_neighbor, obj_val_current)):
+        if (accept_neighbor(obj_val_neighbor, obj_val_current)):
             current = neighbor
 
     temp.append(Temperature)
@@ -95,7 +110,7 @@ for i in range(M):
     Temperature = alpha*Temperature
 
 
-printSolution()
+print_solution()
 
 plt.plot(temp, obj_val)
 plt.title("Z at Temperature Values", fontsize=20, fontweight='bold')
